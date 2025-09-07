@@ -15,7 +15,12 @@ class ThreadsAuthService:
     def __init__(self):
         self.app_id = os.getenv("THREADS_APP_ID")
         self.app_secret = os.getenv("THREADS_APP_SECRET")
-        self.redirect_uri = "https://127.0.0.1:8001/auth/threads/callback"
+        # Vercelデプロイ時はHTTPS URL、ローカル開発時はlocalhost
+        vercel_url = os.getenv("VERCEL_URL")
+        if vercel_url:
+            self.redirect_uri = f"https://{vercel_url}/auth/threads/callback"
+        else:
+            self.redirect_uri = "https://threads-insights-tool.vercel.app/auth/threads/callback"
         
         if not self.app_id or not self.app_secret:
             raise ValueError("Missing THREADS_APP_ID or THREADS_APP_SECRET")
